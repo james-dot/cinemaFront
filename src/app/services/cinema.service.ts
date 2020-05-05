@@ -13,4 +13,14 @@ export class CinemaService {
   getVilles(){
       return this.http.get(this.host+"/villes");
   }
+  getCinemas(ville){
+    return this.http.get(ville._links.cinemas.href);
+  }
+  getSalles(cinema){
+    return this.http.get(cinema._links.salles.href);
+  }
+  getProjections(salle){
+    let url=salle._links.projections.href.replace("{?projection}","");
+    return this.http.get(url+"?projection=p1");//la notion de projection dans restData spring
+  }
 }
