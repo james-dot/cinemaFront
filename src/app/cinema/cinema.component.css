@@ -1,3 +1,7 @@
 .clickable{
     cursor: pointer;
 }
+.ticketButton{
+    margin: 5px;
+    width: 40px;
+}

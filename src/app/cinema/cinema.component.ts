@@ -13,6 +13,7 @@ export class CinemaComponent implements OnInit {
   public salles;
   public currentVille;
   public currentCinema;
+  public currentProjection;
 
   constructor(public cinemaService:CinemaService) { }
 
@@ -25,6 +26,7 @@ export class CinemaComponent implements OnInit {
   }
   onGetCinemas(ville){
     this.currentVille=ville;
+    this.salles=undefined;//quant en click sur une autre ville l'espace salle videe.. 
     this.cinemaService.getCinemas(ville).subscribe(data =>{
       this.cinemas=data;
   },err =>{
@@ -45,6 +47,14 @@ export class CinemaComponent implements OnInit {
       });
   },err =>{
       console.log(err);
+  });
+  }
+  onGetTicketsPlaces(p){
+    this.currentProjection=p;
+   this.cinemaService.getTicketsPlace(p).subscribe(data =>{
+    this.currentProjection.tickets=data;
+  },err =>{ 
+    console.log(err);
   });
   }
  
