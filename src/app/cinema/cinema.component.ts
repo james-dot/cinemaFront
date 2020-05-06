@@ -14,6 +14,7 @@ export class CinemaComponent implements OnInit {
   public currentVille;
   public currentCinema;
   public currentProjection;
+  public selectedTickets;
 
   constructor(public cinemaService:CinemaService) { }
 
@@ -53,9 +54,45 @@ export class CinemaComponent implements OnInit {
     this.currentProjection=p;
    this.cinemaService.getTicketsPlace(p).subscribe(data =>{
     this.currentProjection.tickets=data;
+    this.selectedTickets=[];
   },err =>{ 
     console.log(err);
   });
   }
- 
+  onSelectTicket(t){
+    if(!t.selected){
+      t.selected = true;
+      this.selectedTickets.push(t);
+    }else{
+      t.selected = false;
+      this.selectedTickets.splice(this.selectedTickets.indexOf(t),1);
+    }
+     
+  }
+  //css color du button
+  getTicketClass(t){
+      let str= "ticket btn ";
+      if(t.reserve==true){
+        str+="btn-danger";
+      }else if(t.selected){
+        str+="btn-warning";
+      }else{
+        str+="btn-success";
+      }
+      return str;
+  }
+  //payer les tickets
+  onPayTickets(dataForm){
+    let tickets=[];
+    this.selectedTickets.forEach(t => {
+      tickets.push(t.id);
+    });
+    dataForm.tickets=tickets;
+    this.cinemaService.payerTickets(dataForm).subscribe(data =>{
+      alert("Tickets Réservés avec succès !");
+      this.onGetTicketsPlaces(this.currentProjection);//recharger les tickets des projections(payer et non payer) 
+  },err =>{
+      console.log(err);
+  });
+  }
 }
